@@ -583,34 +583,44 @@ namespace MMI_SP
         }
 
         /// <summary>
-        /// Get the vehicle in database.
+        /// Obtiene la lista de identificadores de vehículos asegurados para un personaje dado.
         /// </summary>
-        /// <param name="dead"></param>
-        /// <returns></returns>
+        /// <param name="characterName">Nombre del personaje (hash del modelo).</param>
+        /// <param name="dead">Si es true, devuelve vehículos destruidos; si false, devuelve vehículos vivos.</param>
+        /// <returns>Lista de identificadores (hash_placa).</returns>
+        /// <summary>
+        /// Obtiene la lista de identificadores de vehículos asegurados para un personaje dado.
+        /// </summary>
+        /// <param name="characterName">Nombre del personaje (hash del modelo).</param>
+        /// <param name="dead">Si es true, devuelve vehículos destruidos; si false, devuelve vehículos vivos.</param>
+        /// <returns>Lista de identificadores (hash_placa).</returns>
         public static List<string> GetInsuredVehicles(string characterName, bool dead)
         {
-            List<string> list = new List<string>();
-            if (_dbFile.Element("Vehicles") != null)
+            if (_dbFile == null)
+                return new List<string>();
+
+            XElement vehiclesElement = _dbFile.Element("Vehicles");
+            if (vehiclesElement == null)
+                return new List<string>();
+
+            List<string> insuredVehicles = new List<string>();
+            string targetStatus = dead ? "Dead" : "Alive";
+
+            foreach (XElement vehicleElement in vehiclesElement.Elements())
             {
-                XElement section = _dbFile.Element("Vehicles");
-                foreach (XElement elem in section.Elements())
+                XElement general = vehicleElement.Element("General");
+                if (general == null) continue;
+
+                string owner = general.Element("Owner")?.Value;
+                string status = general.Element("Status")?.Value;
+
+                if (owner == characterName && status == targetStatus)
                 {
-                    if (elem.Element("General").Element("Owner").Value == characterName)
-                    {
-                        if (dead)
-                        {
-                            if (elem.Element("General").Element("Status").Value == "Dead")
-                                list.Add(elem.Name.ToString());
-                        }
-                        else
-                        {
-                            if (elem.Element("General").Element("Status").Value == "Alive")
-                                list.Add(elem.Name.ToString());
-                        }
-                    }
+                    insuredVehicles.Add(vehicleElement.Name.LocalName);
                 }
             }
-            return list;
+
+            return insuredVehicles;
         }
 
         /// <summary>
