@@ -405,6 +405,14 @@ namespace MMI_SP
             menu.AddItem(emptyItem);
         }
 
+        /// <summary>
+        /// Permite suscribirse al cierre del menú principal.
+        /// </summary>
+        public void OnMainMenuClosed(Action callback)
+        {
+            _mainMenu.OnMenuClose += (sender) => callback();
+        }
+
         // ------------------------------------------------------------------------
         // Funcionalidad Bring (desactivada temporalmente, código migrado por si se reactiva)
         // ------------------------------------------------------------------------
