@@ -553,25 +553,29 @@ namespace MMI_SP
 
             return owner;
         }
+
         /// <summary>
-        /// Return True if the vehicle exist in the database.
+        /// Comprueba si el vehículo está en la base de datos (atajo que extrae el identificador).
         /// </summary>
-        /// <param name="vehIdentifier">Use GetVehicleIdentifier(Vehicle) to get the identifier.</param>
-        /// <returns></returns>
+        /// <param name="veh">Vehículo a comprobar.</param>
         internal bool IsVehicleInDB(Vehicle veh)
         {
             return IsVehicleInDB(Utils.Vehicle.GetVehicleIdentifier(veh));
         }
+
+        /// <summary>
+        /// Comprueba si un identificador de vehículo existe en la base de datos.
+        /// </summary>
+        /// <param name="vehIdentifier">Identificador del vehículo (formato "hash_placa").</param>
         internal bool IsVehicleInDB(string vehIdentifier)
         {
-            bool output = false;
+            // Si el archivo XML no está cargado o no tiene sección <Vehicles>, no hay nada que buscar
+            if (_dbFile == null) return false;
+            if (_dbFile.Element("Vehicles") == null) return false;
 
-            if (_dbFile.Element("Vehicles") != null)
-                if (_dbFile.Element("Vehicles").Element(vehIdentifier) != null)
-                    output = true;
-
-            return output;
+            return _dbFile.Element("Vehicles").Element(vehIdentifier) != null;
         }
+
         /// <summary>
         /// Get the vehicle in database.
         /// </summary>
