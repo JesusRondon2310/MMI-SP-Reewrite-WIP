@@ -32,6 +32,13 @@ namespace MMI_SP
         public static InsuranceManager Instance { get => _instance; }
         // InsuranceManager instance
 
+        public static void Initialize()
+        {
+            if (Instance == null)
+            {
+                _instance = new InsuranceManager(); // ❌ Error CS0200
+            }
+        }
 
         /// <summary>
         /// Tipos de multiplicador de precio. 
