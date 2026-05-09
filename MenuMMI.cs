@@ -220,7 +220,10 @@ namespace MMI_SP
         // -------------------------------------------------------
         private void RebuildMenuCancel()
         {
+
+            if (_submenuCancel == null) return;
             _submenuCancel.Clear();
+
             if (InsuranceManager.Instance == null)
             {
                 AddEmptyItem(_submenuCancel, NoVehiclesMsg);
@@ -253,7 +256,9 @@ namespace MMI_SP
 
         private void RebuildMenuRecover()
         {
+            if (_submenuRecover == null) return;
             _submenuRecover.Clear();
+
             if (InsuranceManager.Instance == null)
             {
                 AddEmptyItem(_submenuRecover, "No tienes vehículos destruidos que recuperar.");
@@ -289,7 +294,15 @@ namespace MMI_SP
 
         private void RebuildMenuPlate()
         {
+            if (_submenuPlate == null) return;
             _submenuPlate.Clear();
+
+            if (InsuranceManager.Instance == null)
+            {
+                AddEmptyItem(_submenuPlate, NoVehiclesMsg);
+                return;
+            }
+
             const int plateChangeCost = 1000;
             List<string> vehicleList = GetInsuredVehicleList();
 
