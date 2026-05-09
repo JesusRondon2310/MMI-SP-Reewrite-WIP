@@ -221,6 +221,12 @@ namespace MMI_SP
         private void RebuildMenuCancel()
         {
             _submenuCancel.Clear();
+            if (InsuranceManager.Instance == null)
+            {
+                AddEmptyItem(_submenuCancel, NoVehiclesMsg);
+                return;
+            }
+
             List<string> vehicleList = GetInsuredVehicleList();
 
             if (vehicleList.Count == 0)
@@ -248,7 +254,6 @@ namespace MMI_SP
         private void RebuildMenuRecover()
         {
             _submenuRecover.Clear();
-
             if (InsuranceManager.Instance == null)
             {
                 AddEmptyItem(_submenuRecover, "No tienes vehículos destruidos que recuperar.");

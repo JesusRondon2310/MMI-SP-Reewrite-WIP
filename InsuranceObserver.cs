@@ -212,6 +212,9 @@ namespace MMI_SP
         /// </summary>
         private void CheckForInsuredVehicles()
         {
+
+            if (InsuranceManager.Instance == null) return;
+
             Vehicle[] array = World.GetAllVehicles();
 
             foreach (Vehicle veh in array)
