@@ -10,11 +10,12 @@ namespace MMI_SP
 {
     internal static class Config
     {
-        internal static readonly string BaseDir = AppDomain.CurrentDomain.BaseDirectory + "\\MMI";
+        internal static readonly string BaseDir = AppDomain.CurrentDomain.BaseDirectory + "\\scripts\\MMI";
         internal static readonly string ConfigFile = BaseDir + "\\config.ini";
         internal static readonly string BannerImage = BaseDir + "\\banner.png";
         internal static readonly string InsuranceImage = BaseDir + "\\insurance.png";
-        
+        internal static readonly string DBFile = BaseDir + "\\db.xml";
+
         public static ScriptSettings Settings { get => _settings; }
         private static ScriptSettings _settings;
 

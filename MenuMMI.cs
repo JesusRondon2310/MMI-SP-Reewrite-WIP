@@ -202,7 +202,7 @@ namespace MMI_SP
             if (lastVeh == null || !lastVeh.Exists()) return;
 
             string vehID = Utils.Vehicle.GetVehicleIdentifier(lastVeh);
-            if (InsuranceManager.IsVehicleInsured(vehID)) return;
+            if (InsuranceManager.Instance.IsVehicleInDB(vehID)) return;
             if (!InsuranceManager.IsVehicleInsurable(lastVeh)) return;
 
             int cost = InsuranceManager.GetVehicleInsuranceCost(lastVeh);
@@ -211,16 +211,20 @@ namespace MMI_SP
             InsureVehicle(lastVeh);
         }
 
+
+
         private void InsureVehicle(Vehicle veh)
         {
-            if (OpenedFromiFruit)
-            {
-                InsuranceManager.Instance.InsureVehicle(veh);
-                PlaySuccess("Vehículo asegurado correctamente.");
-                _itemInsure.Enabled = false;
+            string vehID = Utils.Vehicle.GetVehicleIdentifier(veh);
+            string owner = Game.Player.Character.Model.Hash.ToString();
+            int modelHash = veh.Model.Hash;
+            string plate = veh.Mods.LicensePlate;
 
-                RefreshAffectedMenusAfterInsurance();
-            }
+            InsuranceManager.Instance.InsureVehicle(vehID, modelHash, plate, owner);
+
+            PlaySuccess("Vehículo asegurado correctamente.");
+            _itemInsure.Enabled = false;
+            RefreshAffectedMenusAfterInsurance();
         }
 
         private void RefreshAffectedMenusAfterInsurance()
@@ -352,8 +356,6 @@ namespace MMI_SP
         // -------------------------------------------------------
         private void ChangePlateAction(string vehID, int price, UIMenuItem item)
         {
-            if (OpenedFromiFruit)
-            {
                 string oldPlate = InsuranceManager.Instance.GetVehicleLicensePlate(vehID);
                 string newPlate = Game.GetUserInput(WindowTitle.EnterMessage60, oldPlate, 8);
                 if (string.IsNullOrEmpty(newPlate)) return;
@@ -389,7 +391,6 @@ namespace MMI_SP
 
                 // Refrescar todos los menús afectados
                 RefreshAllMenus();
-            }
         }
 
         // -------------------------------------------------------

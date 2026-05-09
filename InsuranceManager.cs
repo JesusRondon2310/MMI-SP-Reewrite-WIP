@@ -234,6 +234,7 @@ namespace MMI_SP
 
                     // MENSAJE EN EL LOG (Para revisar después de cerrar el juego)
                     Logger.Info("MMI-SP: Base de datos guardada en " + _dbFilePath);
+                    Logger.Debug("Database saved to " + _dbFilePath);
                 }
             }
             catch (Exception e)
@@ -282,6 +283,31 @@ namespace MMI_SP
         }
         /// Removes a vehicle from the database.
 
+        public void InsureVehicle(string vehIdentifier, int modelHash, string licensePlate, string owner)
+        {
+            if (_dbFile == null) return;
+
+            XElement vehiclesElement = _dbFile.Element("Vehicles");
+            if (vehiclesElement == null)
+            {
+                vehiclesElement = new XElement("Vehicles");
+                _dbFile.Add(vehiclesElement);
+            }
+
+            // Evitar duplicados
+            if (vehiclesElement.Element(vehIdentifier) != null) return;
+
+            XElement vehicleElement = new XElement(vehIdentifier);
+            vehicleElement.Add(new XElement("General",
+                new XElement("Model", modelHash),
+                new XElement("Plate", licensePlate),
+                new XElement("Owner", owner),
+                new XElement("Status", "Alive")
+            ));
+            vehiclesElement.Add(vehicleElement);
+
+            SaveDBFile();
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////// INTERNAL METHODS ///////////////////////////////////////////////////////
@@ -492,6 +518,8 @@ namespace MMI_SP
         {
             AddVehicleToDB(veh);
         }
+
+
         /// <summary>
         /// Remove the vehicle from the database.
         /// </summary>
@@ -582,12 +610,6 @@ namespace MMI_SP
             return _dbFile.Element("Vehicles").Element(vehIdentifier) != null;
         }
 
-        /// <summary>
-        /// Obtiene la lista de identificadores de vehículos asegurados para un personaje dado.
-        /// </summary>
-        /// <param name="characterName">Nombre del personaje (hash del modelo).</param>
-        /// <param name="dead">Si es true, devuelve vehículos destruidos; si false, devuelve vehículos vivos.</param>
-        /// <returns>Lista de identificadores (hash_placa).</returns>
         /// <summary>
         /// Obtiene la lista de identificadores de vehículos asegurados para un personaje dado.
         /// </summary>
