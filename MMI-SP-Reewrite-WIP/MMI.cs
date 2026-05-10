@@ -38,7 +38,7 @@ namespace MMI_SP
             Logger.Debug("Configuration values loaded");
 
             Logger.Debug("Initializing InsuranceManager...");
-            Manager.Initialize();
+            Insurance.Core.Initialize();
             Logger.Debug("InsuranceManager initialized");
 
             _initialized = true;
